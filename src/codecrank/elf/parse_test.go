@@ -34,6 +34,9 @@ func TestELFParse(t *testing.T) {
 		t.Error("h does not say PHEntries is 0x2")
 	}
 
+	if h.NumSHEntries != 13 {
+		t.Errorf("h does not say SHEntries is 13, %d instead", h.NumSHEntries)
+	}
 	phs := e.ProgramHeaders
 
 	if len(phs) != 2 {
@@ -41,7 +44,7 @@ func TestELFParse(t *testing.T) {
 	}
 
 	ph0 := phs[0]
-	if ph0.Type != Load {
+	if ph0.Type != PHLoad {
 		t.Error("ph0 does not have Type Load")
 	}
 	if ph0.Offset != 0x74 {
@@ -61,7 +64,7 @@ func TestELFParse(t *testing.T) {
 	}
 
 	ph1 := phs[1]
-	if ph1.Type != Load {
+	if ph1.Type != PHLoad {
 		t.Error("ph1 does not have Type Load")
 	}
 	if ph1.Offset != 0x186 {
@@ -78,5 +81,24 @@ func TestELFParse(t *testing.T) {
 	}
 	if ph1.MemSize != 0x0 {
 		t.Error("ph1 does not MemSize 0x0")
+	}
+
+	shs := e.SectionHeaders
+
+	if len(shs) != 13 {
+		t.Error("SectionHeaders count is not 13")
+	}
+
+	if shs[1].Offset != 0x186 {
+		t.Errorf("Section1 offset is not 0x186, %#x", shs[1].Offset)
+	}
+	if shs[1].Addr != 0x800200 {
+		t.Errorf("Section1 Addr is not 0x800200, %#x", shs[1].Addr)
+	}
+	if shs[1].Type != ProgBitsSection {
+		t.Error("Section1 Type is not ProgBitsSection")
+	}
+	if shs[1].Flags != (Write | Alloc) {
+		t.Error("Section1 Flags is not Write | Alloc")
 	}
 }

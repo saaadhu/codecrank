@@ -28,6 +28,18 @@ func Parse(filePath string) (elf *Elf, err error) {
 		phs[i] = ph
 	}
 
-	return &Elf{ElfHeader: eh, ProgramHeaders: phs}, nil
+	r.Seek(int64(eh.SHOffset), 0)
+
+	shs := make([]SectionHeader, eh.NumSHEntries)
+	for i := 0; i < int(eh.NumSHEntries); i++ {
+		var sh SectionHeader
+		if err = binary.Read(r, binary.LittleEndian, &sh); err != nil {
+			return
+		}
+
+		shs[i] = sh
+	}
+
+	return &Elf{ElfHeader: eh, ProgramHeaders: phs, SectionHeaders: shs}, nil
 
 }

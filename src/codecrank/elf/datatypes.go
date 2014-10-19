@@ -33,39 +33,46 @@ type ElfHeader struct {
 	PHEntrySize        uint16
 	NumPHEntries       uint16
 	SHEntrySize        uint16
-	SHEntry            uint16
+	NumSHEntries       uint16
 	SectionNameSHIndex uint16
 }
 
 const (
-	PHNull    = iota
+	PHNull = iota
 	PHLoad
 	PHDynamic
 	PHInterp
 	PHNote
 	PHShLib
 	PHPHeader
-	PHLOPROC  = 0x70000000
-	PHHIPROC  = 0x7ffffff
+	PHLOPROC = 0x70000000
+	PHHIPROC = 0x7ffffff
 )
 
 const (
-	SHNull = iota
-	SHProgBits
-	SHSymTab
-	SHStrTab
-	SHRela
-	SHHash
-	SHDynamic
-	SHNote
-	SHNoBits
-	SHREL
-	SHSHLib
-	SHDynSym
-	SHLOPROC = 0x70000000
-	SHHIPROC = 0x7fffffff
-	SHLOUSER = 0x80000000
-	SH_HIUSER = 0xffffffff
+	NullSection = iota
+	ProgBitsSection
+	SymTabSection
+	StrTabSection
+	RelaSection
+	HashSection
+	DynamicSection
+	NoteSection
+	NoBitsSection
+	RELSection
+	SHLibSection
+	DynSymSection
+	LOPROCSection = 0x70000000
+	HIPROCSection = 0x7fffffff
+	LOUSERSection = 0x80000000
+	HIUSERSection = 0xffffffff
+)
+
+const (
+	Write = 0x1 << iota
+	Alloc
+	ExecInstr
+	MaskProc = 0xf0000000
 )
 
 type ProgramHeader struct {
@@ -80,21 +87,21 @@ type ProgramHeader struct {
 }
 
 type SectionHeader struct {
-	NameIndex  uint32
-	Type	uint32
-	Flags	uint32
-	Addr	uint32
-	Offset	uint32
-	Size	uint32
-	Link	uint32
-	Info	uint32
+	NameIndex uint32
+	Type      uint32
+	Flags     uint32
+	Addr      uint32
+	Offset    uint32
+	Size      uint32
+	Link      uint32
+	Info      uint32
 	AddrAlign uint32
-	EntSize	uint32
+	EntSize   uint32
 }
 
 type Elf struct {
 	Filepath       string
 	ElfHeader      ElfHeader
 	ProgramHeaders []ProgramHeader
-	SectionHeader []SectionHeader
+	SectionHeaders []SectionHeader
 }
