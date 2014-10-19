@@ -31,15 +31,38 @@ type ElfHeader struct {
 	Flags              uint32
 	HeaderSize         uint16
 	PHEntrySize        uint16
-	PHEntries          uint16
+	NumPHEntries       uint16
 	SHEntrySize        uint16
 	SHEntry            uint16
 	SectionNameSHIndex uint16
 }
 
+const (
+	Null    = iota
+	Load    = iota
+	Dynamic = iota
+	Interp  = iota
+	Note    = iota
+	ShLib   = iota
+	PHeader = iota
+	LOPROC  = 0x70000000
+	HIPROC  = 0x7ffffff
+)
+
+type ProgramHeader struct {
+	Type     uint32
+	Offset   uint32
+	VAddr    uint32
+	PAddr    uint32
+	FileSize uint32
+	MemSize  uint32
+	Flags    uint32
+	Align    uint32
+}
+
 type Elf struct {
-	Filepath  string
-	ElfHeader ElfHeader
-	//ProgramHeader ProgramHeader
+	Filepath       string
+	ElfHeader      ElfHeader
+	ProgramHeaders []ProgramHeader
 	//SectionHeader SectionHeader
 }

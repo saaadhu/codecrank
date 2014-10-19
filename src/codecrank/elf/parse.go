@@ -6,16 +6,28 @@ import (
 )
 
 func Parse(filePath string) (elf *Elf, err error) {
-	reader, err := os.Open(filePath)
+	r, err := os.Open(filePath)
 	if err != nil {
 		return
 	}
 
-	var header ElfHeader
-	if err = binary.Read(reader, binary.LittleEndian, &header); err != nil {
+	var eh ElfHeader
+	if err = binary.Read(r, binary.LittleEndian, &eh); err != nil {
 		return
 	}
 
-	return &Elf{ElfHeader: header}, nil
+	r.Seek(int64(eh.PHOffset), 0)
+
+	phs := make([]ProgramHeader, eh.NumPHEntries)
+	for i := 0; i < int(eh.NumPHEntries); i++ {
+		var ph ProgramHeader
+		if err = binary.Read(r, binary.LittleEndian, &ph); err != nil {
+			return
+		}
+
+		phs[i] = ph
+	}
+
+	return &Elf{ElfHeader: eh, ProgramHeaders: phs}, nil
 
 }
