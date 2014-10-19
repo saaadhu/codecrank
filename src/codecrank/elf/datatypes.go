@@ -38,15 +38,34 @@ type ElfHeader struct {
 }
 
 const (
-	Null    = iota
-	Load    = iota
-	Dynamic = iota
-	Interp  = iota
-	Note    = iota
-	ShLib   = iota
-	PHeader = iota
-	LOPROC  = 0x70000000
-	HIPROC  = 0x7ffffff
+	PHNull    = iota
+	PHLoad
+	PHDynamic
+	PHInterp
+	PHNote
+	PHShLib
+	PHPHeader
+	PHLOPROC  = 0x70000000
+	PHHIPROC  = 0x7ffffff
+)
+
+const (
+	SHNull = iota
+	SHProgBits
+	SHSymTab
+	SHStrTab
+	SHRela
+	SHHash
+	SHDynamic
+	SHNote
+	SHNoBits
+	SHREL
+	SHSHLib
+	SHDynSym
+	SHLOPROC = 0x70000000
+	SHHIPROC = 0x7fffffff
+	SHLOUSER = 0x80000000
+	SH_HIUSER = 0xffffffff
 )
 
 type ProgramHeader struct {
@@ -60,9 +79,22 @@ type ProgramHeader struct {
 	Align    uint32
 }
 
+type SectionHeader struct {
+	NameIndex  uint32
+	Type	uint32
+	Flags	uint32
+	Addr	uint32
+	Offset	uint32
+	Size	uint32
+	Link	uint32
+	Info	uint32
+	AddrAlign uint32
+	EntSize	uint32
+}
+
 type Elf struct {
 	Filepath       string
 	ElfHeader      ElfHeader
 	ProgramHeaders []ProgramHeader
-	//SectionHeader SectionHeader
+	SectionHeader []SectionHeader
 }
