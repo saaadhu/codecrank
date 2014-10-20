@@ -1,8 +1,9 @@
 package elf
 
 type Segment struct {
-	Name   string
-	Offset string
+	Offset   string
+	Sections []Section
+	Contents []byte
 }
 
 type Section struct {
@@ -104,4 +105,7 @@ type Elf struct {
 	ElfHeader      ElfHeader
 	ProgramHeaders []ProgramHeader
 	SectionHeaders []SectionHeader
+	Segments       []Segment
+	Sections       []Section
+	Contents       []byte
 }

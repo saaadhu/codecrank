@@ -101,4 +101,14 @@ func TestELFParse(t *testing.T) {
 	if shs[1].Flags != (Write | Alloc) {
 		t.Error("Section1 Flags is not Write | Alloc")
 	}
+
+	ss := e.Sections
+
+	if len(ss) != 13 {
+		t.Error("Sections count is not 13")
+	}
+
+	if ss[1].Name != ".data" {
+		t.Errorf("Section1 name is not .data, %s", ss[1].Name)
+	}
 }
